@@ -1,7 +1,6 @@
 package routes
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -26,17 +25,16 @@ func SetupRouter(r *gin.Engine) {
 
 	r.POST("/users", func(c *gin.Context) {
 
-		var newUser1 User
-		if err := c.BindJSON(&newUser1); err != nil {
+		var newUser User
+		if err := c.BindJSON(&newUser); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid payload"})
 			return
 		}
-		fmt.Println(newUser1)
-		if newUser1.Name == "" || newUser1.Email == "" {
+		if newUser.Name == "" || newUser.Email == "" {
 			c.JSON(http.StatusBadRequest, gin.H{"error": "Name and email are required"})
 			return
 		}
-		users = append(users, newUser1)
+		users = append(users, newUser)
 
 		c.JSON(http.StatusOK, gin.H{"message": "User added successfully", "users": users})
 	})
