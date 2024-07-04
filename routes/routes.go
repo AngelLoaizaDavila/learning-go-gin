@@ -15,27 +15,36 @@ type User struct {
 var users []User
 
 func SetupRouter(r *gin.Engine) {
+
+	r.LoadHTMLGlob("templates/*")
+
 	r.GET("/", func(c *gin.Context) {
-		c.String(http.StatusOK, "Hello, World!")
-	})
-	r.GET("/greetings/:name", func(c *gin.Context) {
-		name := c.Param("name")
-		c.String(http.StatusOK, "Hello, %s!", name)
+		c.HTML(http.StatusOK, "index.html", gin.H{
+			"Title":   "My App",
+			"Heading": "Hello World!",
+			"Message": "Welcome to my App with Gin and HTML templates",
+		})
 	})
 
-	r.POST("/users", func(c *gin.Context) {
+	// r.GET("/greetings/:name", func(c *gin.Context) {
+	// 	name := c.Param("name")
+	// 	c.String(http.StatusOK, "Hello, %s!", name)
+	// })
 
-		var newUser User
-		if err := c.BindJSON(&newUser); err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid payload"})
-			return
-		}
-		if newUser.Name == "" || newUser.Email == "" {
-			c.JSON(http.StatusBadRequest, gin.H{"error": "Name and email are required"})
-			return
-		}
-		users = append(users, newUser)
+	// r.POST("/users", func(c *gin.Context) {
 
-		c.JSON(http.StatusOK, gin.H{"message": "User added successfully", "users": users})
-	})
+	// 	var newUser User
+	// 	if err := c.BindJSON(&newUser); err != nil {
+	// 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid payload"})
+	// 		return
+	// 	}
+	// 	if newUser.Name == "" || newUser.Email == "" {
+	// 		c.JSON(http.StatusBadRequest, gin.H{"error": "Name and email are required"})
+	// 		return
+	// 	}
+	// 	users = append(users, newUser)
+
+	// 	c.JSON(http.StatusOK, gin.H{"message": "User added successfully", "users": users})
+	// })
+	r.Static("/static", "./static")
 }
